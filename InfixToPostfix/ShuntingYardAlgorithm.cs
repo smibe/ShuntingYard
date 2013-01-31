@@ -9,7 +9,14 @@ namespace InfixToPostfix
     {
         public string Transform(string expression)
         {
-            return string.Empty;
+            string[] tokens = (expression ?? String.Empty).Split(' ');
+
+            if (tokens.Length == 3)
+            {
+                return String.Format("{0} {2} {1}", tokens);
+            }
+
+            return expression ?? String.Empty;
         }
     }
 }
