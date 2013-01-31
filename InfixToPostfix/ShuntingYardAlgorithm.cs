@@ -8,26 +8,45 @@ namespace InfixToPostfix
 {
     class ShuntingYardAlgorithm
     {
+        private string[] _tokens;
         public string Transform(string expression)
         {
-            string[] tokens = (expression ?? String.Empty).Split(' ');
-            _result = string.Empty;
-            string previous = string.Empty;
+            Initialize(expression);
 
-            foreach(string current in tokens)
+            ProcessTokens();
+
+            return _result;
+        }
+
+        private void ProcessTokens()
+        {
+            foreach (string current in _tokens)
             {
                 if (IsLiteral(current))
+                {
                     AppendToken(current);
+                }
                 else
                 {
-                    AppendToken(previous);
-                    previous = current;
+                    HandleOperator(current);
                 }
             }
 
-            AppendToken(previous);
+            AppendToken(_previous);
+        }
 
-            return _result;
+        private void HandleOperator(string current)
+        {
+            AppendToken(_previous);
+            _previous = current;
+
+        }
+
+        private void Initialize(string expression)
+        {
+            _tokens = (expression ?? String.Empty).Split(' ');
+            _result = string.Empty;
+            _previous = string.Empty;
         }
 
         private bool IsLiteral(string token)
@@ -45,6 +64,8 @@ namespace InfixToPostfix
 
             _result += token;
         }
+
         public string _result { get; set; }
+        public string _previous { get; set; }
     }
 }
