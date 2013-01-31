@@ -36,7 +36,12 @@ namespace InfixToPostfix
             Expect("7 4 +");
         }
 
-
+        [TestMethod]
+        public void HandlesMultipleOperatorsOfTheSamePrecedence()
+        {
+            Given("7 + 4 - 8");
+            Expect("7 4 + 8 -");
+        }
         void Given(string expression)
         {
             ShuntingYardAlgorithm algorithm = new ShuntingYardAlgorithm();

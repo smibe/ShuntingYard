@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace InfixToPostfix
 {
@@ -10,13 +11,29 @@ namespace InfixToPostfix
         public string Transform(string expression)
         {
             string[] tokens = (expression ?? String.Empty).Split(' ');
+            string result = string.Empty;
+            string previous = string.Empty;
 
-            if (tokens.Length == 3)
+            foreach(string current in tokens)
             {
-                return String.Format("{0} {2} {1}", tokens);
+                if (IsLiteral(current))
+                    result += current;
+                else
+                {
+                    if (previous != "")
+                        result += previous;
+                    previous = current;
+                }
             }
 
-            return expression ?? String.Empty;
+            result += previous;
+
+            return result;
+        }
+
+        private bool IsLiteral(string current)
+        {
+            return Regex.IsMatch(current, @"(\w+|\d+)");
         }
     }
 }
