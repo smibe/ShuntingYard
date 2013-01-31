@@ -42,6 +42,21 @@ namespace InfixToPostfix
             Given("7 + 4 - 8");
             Expect("7 4 + 8 -");
         }
+
+        [TestMethod]
+        public void HandlesOperatorsOfDifferentPrecedence()
+        {
+            Given("7 + 4 * 8");
+            Expect("7 4 8 * +");
+        }
+
+        [TestMethod]
+        public void HandlesOperatorsLowHighHighLowLow()
+        {
+            Given("3 + 3 * 5 * 4 + 6 + 7");
+            Expect("3 3 5 * 4 * + 6 + 7 +");
+        }
+
         void Given(string expression)
         {
             ShuntingYardAlgorithm algorithm = new ShuntingYardAlgorithm();

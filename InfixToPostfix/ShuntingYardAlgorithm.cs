@@ -9,8 +9,13 @@ namespace InfixToPostfix
     class ShuntingYardAlgorithm
     {
         private string[] _tokens;
+        public Stack<string> _previousTokens;
+        public string _previous;
+        protected string _result;
+        
         public string Transform(string expression)
         {
+
             Initialize(expression);
 
             ProcessTokens();
@@ -32,14 +37,45 @@ namespace InfixToPostfix
                 }
             }
 
-            AppendToken(_previous);
+            AppendAllPreviousTokens();
+        }
+
+        private void AppendAllPreviousTokens()
+        {
+            while (_previousTokens.Count > 0)
+                AppendPreviousToken();
         }
 
         private void HandleOperator(string current)
         {
-            AppendToken(_previous);
-            _previous = current;
+            while (!ExecutesBeforePrevious(current))
+                AppendPreviousToken();
+            _previousTokens.Push(current);
+        }
 
+        private bool ExecutesBeforePrevious(string current)
+        {
+            if (_previousTokens.Count <= 0)
+                return true;
+
+            return GetPrecedence(current) > GetPrecedence(_previousTokens.Peek());
+        }
+
+        private int GetPrecedence(string p)
+        {
+            switch (p)
+            {
+                case "*":
+                    return 100;
+                default:
+                    return 10;
+            }
+        }
+
+        private void AppendPreviousToken()
+        {
+            if (_previousTokens.Count > 0)
+                AppendToken(_previousTokens.Pop());
         }
 
         private void Initialize(string expression)
@@ -47,6 +83,7 @@ namespace InfixToPostfix
             _tokens = (expression ?? String.Empty).Split(' ');
             _result = string.Empty;
             _previous = string.Empty;
+            _previousTokens = new Stack<string>();
         }
 
         private bool IsLiteral(string token)
@@ -65,7 +102,5 @@ namespace InfixToPostfix
             _result += token;
         }
 
-        public string _result { get; set; }
-        public string _previous { get; set; }
     }
 }
