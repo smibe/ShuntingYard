@@ -11,29 +11,40 @@ namespace InfixToPostfix
         public string Transform(string expression)
         {
             string[] tokens = (expression ?? String.Empty).Split(' ');
-            string result = string.Empty;
+            _result = string.Empty;
             string previous = string.Empty;
 
             foreach(string current in tokens)
             {
                 if (IsLiteral(current))
-                    result += current;
+                    AppendToken(current);
                 else
                 {
-                    if (previous != "")
-                        result += previous;
+                    AppendToken(previous);
                     previous = current;
                 }
             }
 
-            result += previous;
+            AppendToken(previous);
 
-            return result;
+            return _result;
         }
 
-        private bool IsLiteral(string current)
+        private bool IsLiteral(string token)
         {
-            return Regex.IsMatch(current, @"(\w+|\d+)");
+            return Regex.IsMatch(token, @"(\w+|\d+)");
         }
+
+        void AppendToken(string token)
+        {
+            if (token == "")
+                return;
+            
+            if (_result.Length > 0)
+                _result += ' ';
+
+            _result += token;
+        }
+        public string _result { get; set; }
     }
 }
