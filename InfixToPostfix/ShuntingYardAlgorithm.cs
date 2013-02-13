@@ -29,7 +29,15 @@ namespace InfixToPostfix
             {
                 if (IsLiteral(current))
                 {
-                    AppendToken(current);
+                    HandleLiteral(current);
+                }
+                else if (IsOpenParanthesis(current))
+                {
+                    HandleOpenParanthesis();
+                }
+                else if (IsClosedParanthesis(current))
+                {
+                    HandleClosedParanthesis();
                 }
                 else
                 {
@@ -38,6 +46,36 @@ namespace InfixToPostfix
             }
 
             AppendAllPreviousTokens();
+        }
+
+        private void HandleClosedParanthesis()
+        {
+
+            while (this._previousTokens.Count > 0 && this._previousTokens.Peek() != "(")
+                AppendPreviousToken();
+            
+            if (_previousTokens.Count > 0)
+		    _previousTokens.Pop();
+        }
+
+        private bool IsClosedParanthesis(string token)
+        {
+            return ")".Equals(token);
+        }
+
+        private void HandleOpenParanthesis()
+        {
+            _previousTokens.Push("(");
+        }
+
+        private bool IsOpenParanthesis(string token)
+        {
+            return "(".Equals(token);
+        }
+
+        private void HandleLiteral(string current)
+        {
+            AppendToken(current);
         }
 
         private void AppendAllPreviousTokens()
@@ -67,8 +105,12 @@ namespace InfixToPostfix
             {
                 case "*":
                     return 100;
-                default:
+                case "+":
                     return 10;
+                case "(":
+                    return 5;
+                default:
+                    return -1;
             }
         }
 

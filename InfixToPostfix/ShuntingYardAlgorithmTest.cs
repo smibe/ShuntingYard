@@ -51,10 +51,24 @@ namespace InfixToPostfix
         }
 
         [TestMethod]
+        public void RemoveUnnecessaryParanthesis()
+        {
+            Given("( 2 * 4 ) + 8 )");
+            Expect("2 4 * 8 +");
+        }
+
+        [TestMethod]
         public void HandlesOperatorsLowHighHighLowLow()
         {
             Given("3 + 3 * 5 * 4 + 6 + 7");
             Expect("3 3 5 * 4 * + 6 + 7 +");
+        }
+
+        [TestMethod]
+        public void HandlesPharantesisCorrectly()
+        {
+            Given("( ( a + 5 ) * 9 )");
+            Expect("a 5 + 9 *");
         }
 
         void Given(string expression)
