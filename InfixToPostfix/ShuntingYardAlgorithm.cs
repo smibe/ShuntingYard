@@ -8,7 +8,7 @@ namespace InfixToPostfix
 {
     class ShuntingYardAlgorithm
     {
-        private string[] _tokens;
+        private List<string> _tokens = new List<string>();
         public Stack<string> _previousTokens;
         public string _previous;
         protected string _result;
@@ -122,10 +122,25 @@ namespace InfixToPostfix
 
         private void Initialize(string expression)
         {
-            _tokens = (expression ?? String.Empty).Split(' ');
+            TokenizeExpression(expression);
             _result = string.Empty;
             _previous = string.Empty;
             _previousTokens = new Stack<string>();
+        }
+
+        private void TokenizeExpression(string expression)
+        {
+            if (string.IsNullOrEmpty(expression))
+                return;
+
+            Regex regex = new Regex(@"(\d+)|(\w+)|\+|\*|\(|\-|\)");
+            Match match = regex.Match(expression);
+
+            while (match.Success)
+            {
+                _tokens.Add(match.ToString());
+                match = match.NextMatch();
+            }
         }
 
         private bool IsLiteral(string token)

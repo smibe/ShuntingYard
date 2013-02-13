@@ -37,9 +37,16 @@ namespace InfixToPostfix
         }
 
         [TestMethod]
+        public void ParsesExpressionsWithoutSpaces()
+        {
+            Given("1+2");
+            Expect("1 2 +");
+        }
+
+        [TestMethod]
         public void HandlesMultipleOperatorsOfTheSamePrecedence()
         {
-            Given("7 + 4 - 8");
+            Given("7+4-    8");
             Expect("7 4 + 8 -");
         }
 
